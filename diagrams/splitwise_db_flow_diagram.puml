@@ -1,0 +1,31 @@
+@startuml Splitwise_DB_Entities
+
+actor Admin
+actor User
+
+User -> "User Service": Register/Login
+"User Service" -> "Database": Insert into users
+
+User -> "Group Service": Create Group
+"Group Service" -> "Database": Insert into groups
+"Group Service" -> "Database": Insert into user_group
+
+User -> "Group Service": Join Group
+"Group Service" -> "Database": Insert into user_group
+
+User -> "Expense Service": Add Expense
+"Expense Service" -> "Database": Insert into expenses
+"Expense Service" -> "Debt Service": Calculate debts
+
+"Debt Service" -> "Database": Insert into debts (multiple rows)
+
+User -> "Expense Service": View Group Expenses
+"Expense Service" -> "Database": Select from expenses WHERE group_id = ?
+
+User -> "Debt Service": View Balances
+"Debt Service" -> "Database": Select from debts WHERE from_user = ?
+
+User -> "Debt Service": Settle Debt
+"Debt Service" -> "Database": Update debt SET status = 'Settled'
+
+@enduml
